@@ -19,6 +19,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
           <Link href="/dashboard/settings" className="block px-4 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700 font-medium transition-colors">
             Settings
           </Link>
+          <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">
+            <Link href={`/${session.user?.name}`} target="_blank" className="block px-4 py-2.5 rounded-lg text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/30 font-medium transition-colors flex justify-between items-center">
+              My Portfolio
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </Link>
+          </div>
         </nav>
         <div className="p-4 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-500">
           {session.user?.name || session.user?.email}
