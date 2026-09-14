@@ -8,7 +8,8 @@ export const revalidate = 60; // ISR
 export default async function PortfolioPage({ params }: { params: { username: string } }) {
   await connectDB(env.MONGODB_URI);
   
-  const user = await UserModel.findOne({ name: params.username });
+  const username = decodeURIComponent(params.username);
+  const user = await UserModel.findOne({ name: username });
   if (!user) return notFound();
 
   const projects = await ProjectModel.find({ userId: user._id, status: "published" }).sort({ score: -1, createdAt: -1 });
@@ -23,11 +24,11 @@ export default async function PortfolioPage({ params }: { params: { username: st
           <img src={user.avatar} alt={user.name} className="w-32 h-32 rounded-full shadow-lg mb-6 ring-4 ring-blue-500/20" />
         ) : (
           <div className="w-32 h-32 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 shadow-lg mb-6 flex items-center justify-center text-4xl text-white font-bold ring-4 ring-blue-500/20">
-            {params.username.charAt(0).toUpperCase()}
+            {username.charAt(0).toUpperCase()}
           </div>
         )}
         <h1 className="text-5xl font-extrabold tracking-tight mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
-          {user.name || params.username}
+          {user.name || username}
         </h1>
         <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed">
           {user.bio || "Software Engineer & Open Source Contributor"}
