@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectDB, ProjectModel } from "@devsync/database";
+import { connectDB, ProjectModel, UserModel } from "@devsync/database";
 import { env } from "@devsync/config";
 import { enrichProjectData } from "@devsync/ai";
 
@@ -40,8 +40,13 @@ export async function POST(req: NextRequest) {
       longDescription: aiMetadata.longDescription,
       features: aiMetadata.features,
     };
+    // Check user preferences for auto-publishing
+    const user = await UserModel.findById(project.userId);
+    const autoPublish = user?.preferences?.autoPublishProjects === true;
+
     project.categories = [aiMetadata.category, ...aiMetadata.tags].slice(0, 5);
-    project.status = "draft";
+    project.status = autoPublish ? "published" : "draft";
+    if (autoPublish) project.published = true;
     project.score = Math.min(score, 100);
 
     await project.save();

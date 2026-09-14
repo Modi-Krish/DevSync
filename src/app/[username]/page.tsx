@@ -1,4 +1,4 @@
-import { connectDB, ProjectModel, UserModel, TechnologyModel } from "@devsync/database";
+import { connectDB, ProjectModel, UserModel, TechnologyModel, PostModel } from "@devsync/database";
 import { env } from "@devsync/config";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -13,6 +13,7 @@ export default async function PortfolioPage({ params }: { params: { username: st
 
   const projects = await ProjectModel.find({ userId: user._id, status: "published" }).sort({ score: -1, createdAt: -1 });
   const technologies = await TechnologyModel.find({ userId: user._id }).sort({ projectsCount: -1 }).limit(10);
+  const posts = await PostModel.find({ userId: user._id }).sort({ publishedAt: -1 }).limit(5);
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans selection:bg-blue-500 selection:text-white">
@@ -98,6 +99,42 @@ export default async function PortfolioPage({ params }: { params: { username: st
           </div>
         )}
       </section>
+
+      {/* Recent Updates (LinkedIn Posts) */}
+      {posts.length > 0 && (
+        <section className="py-20 px-4 bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold mb-10 text-center">Recent Updates</h2>
+            <div className="space-y-6">
+              {posts.map(post => (
+                <div key={post._id.toString()} className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 border border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-xl">
+                        in
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-900 dark:text-gray-100">{user.name}</h4>
+                        <p className="text-sm text-gray-500">
+                          {new Date(post.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <p className="text-gray-700 dark:text-gray-300 mb-4 whitespace-pre-line">
+                    {post.content}
+                  </p>
+                  {post.url && (
+                    <a href={post.url} target="_blank" rel="noreferrer" className="text-blue-600 dark:text-blue-400 font-medium hover:underline text-sm">
+                      View on LinkedIn →
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
       
       <footer className="py-8 text-center text-gray-500 border-t border-gray-200 dark:border-gray-800 mt-20">
         <p>Powered by DevSync</p>

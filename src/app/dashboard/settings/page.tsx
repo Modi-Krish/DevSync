@@ -34,7 +34,7 @@ export default async function SettingsPage() {
         bio: bio,
         "preferences.autoPublishProjects": autoPublish,
       }
-    });
+    }, { upsert: true });
 
     revalidatePath("/dashboard/settings");
     revalidatePath(`/${session.user.name}`);
