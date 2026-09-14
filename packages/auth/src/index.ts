@@ -54,7 +54,7 @@ export const {
     }),
   ],
   callbacks: {
-    async jwt({ token, account }) {
+    async jwt({ token, account, profile }) {
       // If sign in, save the encrypted token in the DB or JWT
       if (account) {
         token.accessToken = encrypt(account.access_token as string);
