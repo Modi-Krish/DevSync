@@ -60,12 +60,19 @@ export const {
         token.accessToken = encrypt(account.access_token as string);
         token.providerAccountId = account.providerAccountId;
         
-        // If it's linkedin, save the token to DB so background workers can fetch posts
+        // If it's linkedin, save the token and profile info to DB so background workers can fetch posts
         if (account.provider === "linkedin") {
           await connectDB(env.MONGODB_URI);
           await UserModel.findByIdAndUpdate(
             account.providerAccountId,
-            { $set: { linkedinAccessToken: encrypt(account.access_token as string) } },
+            { 
+              $set: { 
+                name: profile?.name || profile?.localizedFirstName, 
+                email: profile?.email,
+                avatar: profile?.picture,
+                linkedinAccessToken: encrypt(account.access_token as string) 
+              } 
+            },
             { upsert: true }
           );
         }
