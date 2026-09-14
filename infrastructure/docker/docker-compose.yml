@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: devsync-mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - devsync-mongo-data:/data/db
+    restart: always
+
+volumes:
+  devsync-mongo-data:

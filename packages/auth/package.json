@@ -1,0 +1,14 @@
+{
+  "name": "@devsync/auth",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "next-auth": "5.0.0-beta.18",
+    "@devsync/config": "workspace:*",
+    "@devsync/database": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
