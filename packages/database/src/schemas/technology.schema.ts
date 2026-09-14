@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const TechnologySchema = new Schema(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    userId: { type: String, ref: "User", required: true },
     name: { type: String, required: true },
     category: { type: String },
     projectsCount: { type: Number, default: 0 },
